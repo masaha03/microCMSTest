@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>microCMS Test</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/microcms-js-sdk@latest/dist/umd/microcms-js-sdk.js"></script>
+    <script src="https://unpkg.com/vue@3"></script>
+  </head>
+  <body>
+    <div
+      id="app"
+      class="grid p-4 gap-4 bg-sky-100"
+      style="grid-template-columns: 1fr 20rem"
+    >
+      <header class="col-span-2 p-4 font-bold text-4xl">
+        <a href="/index.html">microCMS Test</a>
+      </header>
+      <main class="p-4">
+        <article v-if="!!blog" class="p-4 bg-sky-50 drop-shadow">
+          <h1 class="text-sky-800 font-bold text-xl">{{blog.title}}</h1>
+          <div class="text-slate-400 text-sm px-4 py-2">
+            <time :datetime="blog.publishedAt"
+              >{{formatDate(blog.publishedAt)}}</time
+            >
+            &emsp;{{blog.category.name}}
+          </div>
+          <p v-html="blog.content"></p>
+        </article>
+
+        <ol v-else class="flex flex-col gap-4">
+          <li
+            :key="blog.id"
+            v-for="blog in blogs"
+            class="p-4 bg-sky-50 drop-shadow"
+          >
+            <a
+              :href="`/index.html?id=${blog.id}`"
+              class="text-sky-800 font-bold text-xl"
+              >{{blog.title}}</a
+            >
+            <div class="text-slate-400 text-sm px-4 py-2">
+              {{blog.category.name}}
+            </div>
+            <img class="block" :src="blog.eyecatch.url" alt="アイキャッチ" />
+          </li>
+        </ol>
+      </main>
+
+      <aside class="p-4 bg-sky-400 drop-shadow">
+        <nav>
+          <ul>
+            <li :key="category.id" v-for="category in categories">
+              <a :href="`/index.html?cid=${category.id}`">{{category.name}}</a>
+            </li>
+          </ul>
+        </nav>
+      </aside>
+    </div>
+
+    <script>
+      const { createClient } = microcms;
+
+      const client = createClient({
+        serviceDomain: 'q71eht488a',
+        apiKey: 'db155bcac4654891839a561946f1686bbc81',
+      });
+
+      const { createApp, ref, computed } = Vue;
+
+      createApp({
+        setup() {
+          const formatDate = new Intl.DateTimeFormat('ja-JP', {
+            dateStyle: 'long',
+            timeStyle: 'short',
+          });
+
+          const categoryId = new URLSearchParams(location.search).get('cid');
+
+          const blogs = ref([]);
+          const filterdBlogs = computed(() =>
+            categoryId === null
+              ? blogs.value
+              : blogs.value.filter((el) => el.category.id === categoryId)
+          );
+          const id = new URLSearchParams(location.search).get('id');
+          const blog = computed(() => blogs.value.find((el) => el.id === id));
+
+          const categories = ref([]);
+
+          client
+            .get({
+              endpoint: 'blogs',
+            })
+            .then((res) => {
+              blogs.value = res.contents;
+              console.log(res.contents[0]);
+            });
+
+          client
+            .get({
+              endpoint: 'categories',
+            })
+            .then((res) => {
+              categories.value = res.contents;
+            });
+
+          return {
+            formatDate: (date) => formatDate.format(new Date(date)),
+            blogs: filterdBlogs,
+            blog,
+            categories,
+          };
+        },
+      }).mount('#app');
+    </script>
+  </body>
+</html>
