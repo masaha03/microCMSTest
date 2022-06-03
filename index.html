@@ -15,7 +15,7 @@
       style="grid-template-columns: 1fr 20rem"
     >
       <header class="col-span-2 p-4 font-bold text-4xl">
-        <a href="/index.html">microCMS Test</a>
+        <a href="./index.html">microCMS Test</a>
       </header>
       <main class="p-4">
         <article v-if="!!blog" class="p-4 bg-sky-50 drop-shadow">
@@ -36,7 +36,7 @@
             class="p-4 bg-sky-50 drop-shadow"
           >
             <a
-              :href="`/index.html?id=${blog.id}`"
+              :href="`./index.html?id=${blog.id}`"
               class="text-sky-800 font-bold text-xl"
               >{{blog.title}}</a
             >
@@ -52,7 +52,7 @@
         <nav>
           <ul>
             <li :key="category.id" v-for="category in categories">
-              <a :href="`/index.html?cid=${category.id}`">{{category.name}}</a>
+              <a :href="`./index.html?cid=${category.id}`">{{category.name}}</a>
             </li>
           </ul>
         </nav>
