@@ -7,7 +7,7 @@ on:
     branches:
       - master
 jobs:
-  setup:
+  deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -48,7 +48,7 @@ jobs:
           path: public
 
   capture:
-    needs: build
+    needs: deploy
     timeout-minutes: 60
     runs-on: ubuntu-latest
     steps:
