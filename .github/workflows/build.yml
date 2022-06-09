@@ -1,5 +1,7 @@
 name: Build
 on:
+  repository_dispatch:
+    types: [update_post]
   workflow_dispatch:
   push:
     branches:
