@@ -36,4 +36,8 @@ jobs:
           path: public
 
       - name: Publish
-        run: npx wrangler pages publish public --project-name=${{ secrets.PROJECT_NAME }} --commit-dirty=true
+        uses: cloudflare/wrangler-action@2.0.0
+        with:
+          apiKey: ${{ secrets.CLOUDFLARE_API_KEY }}
+          email: ${{ secrets.CLOUDFLARE_EMAIL }}
+        command: pages publish public --project-name=${{ secrets.PROJECT_NAME }} --commit-dirty=true
