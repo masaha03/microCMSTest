@@ -27,13 +27,26 @@ jobs:
   download-hugo:
     runs-on: ubuntu-latest
     steps:
+      - name: Cache hugo
+        id: cache-hugo
+        uses: actions/cache@v3
+        with:
+          path: ./hugo
+          key: hugo_extended_0.100.1
+          restore-keys: hugo_extended_
       - run: wget https://github.com/gohugoio/hugo/releases/download/v0.100.1/hugo_extended_0.100.1_Linux-64bit.tar.gz
       - run: tar -xf hugo_extended_0.100.1_Linux-64bit.tar.gz
-  
+
   build:
     needs: [setup, download-hugo]
     runs-on: ubuntu-latest
     steps:
+      - name: Use hugo cache
+        id: cache-hugo
+        uses: actions/cache@v3
+        with:
+          path: ./hugo
+          key: hugo_
       - run: ./hugo
 
   publish:
