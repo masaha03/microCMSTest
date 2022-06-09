@@ -22,6 +22,7 @@
     "cheerio": "^1.0.0-rc.11",
     "microcms-js-sdk": "^2.0.0",
     "minimist": "^1.2.6",
+    "serve": "^13.0.2",
     "typescript": "^4.7.3",
     "wrangler": "^2.0.8",
     "yaml": "^2.1.1"

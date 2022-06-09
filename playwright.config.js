@@ -99,7 +99,7 @@ const config = {
 
   /* Run your local dev server before starting the tests */
   webServer: {
-    command: "./hugo server",
+    command: "npx serve -p 1313 public",
     port: 1313,
   },
 };

@@ -59,12 +59,6 @@ jobs:
         with:
           node-version: 16.13.x
           cache: npm      
-      - name: Use hugo cache
-        id: cache-hugo
-        uses: actions/cache@v3
-        with:
-          path: ./hugo
-          key: hugo_extended_
       - uses: actions/download-artifact@v3
         with:
           name: dist
