@@ -7,7 +7,7 @@ on:
     branches:
       - master
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -17,6 +17,9 @@ jobs:
         with:
           node-version: 16.13.x
           cache: npm      
+      - name: Install
+        run: npm ci
+      - run: npm run update -- --date 2022-06-02T08:23:05.896Z --apiKey ${{ secrets.API_KEY }} --serviceDomain ${{ secrets.SERVICE_DOMAIN }}
       - name: Cache hugo
         id: cache-hugo
         uses: actions/cache@v3
@@ -28,13 +31,16 @@ jobs:
         run: wget https://github.com/gohugoio/hugo/releases/download/v0.100.1/hugo_extended_0.100.1_Linux-64bit.tar.gz
       - if: steps.cache-hugo.outputs.cache-hit != 'true'
         run: tar -xf hugo_extended_0.100.1_Linux-64bit.tar.gz
-
-      - name: Install
-        run: npm ci
-
-      - run: npm run update -- --date 2022-06-02T08:23:05.896Z --apiKey ${{ secrets.API_KEY }} --serviceDomain ${{ secrets.SERVICE_DOMAIN }}
       - run: ./hugo
 
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v3
+        with:
+          name: dist
+          path: public
       - name: Publish
         uses: cloudflare/wrangler-action@2.0.0
         with:
@@ -48,7 +54,7 @@ jobs:
           path: public
 
   capture:
-    needs: deploy
+    needs: build
     timeout-minutes: 60
     runs-on: ubuntu-latest
     steps:
@@ -58,16 +64,15 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 16.13.x
-          cache: npm      
-      - uses: actions/download-artifact@v3
-        with:
-          name: dist
-          path: public
-          
+          cache: npm        
       - name: Install
         run: npm ci
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
+      - uses: actions/download-artifact@v3
+        with:
+          name: dist
+          path: public
       - name: Run Playwright tests
         run: npx playwright test
       - uses: actions/upload-artifact@v2
