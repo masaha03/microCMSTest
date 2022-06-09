@@ -32,6 +32,11 @@ jobs:
       - if: steps.cache-hugo.outputs.cache-hit != 'true'
         run: tar -xf hugo_extended_0.100.1_Linux-64bit.tar.gz
       - run: ./hugo
+      - name: Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: dist
+          path: public
 
   deploy:
     needs: build
@@ -47,11 +52,6 @@ jobs:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           command: pages publish public --project-name=${{ secrets.PROJECT_NAME }} --commit-dirty=true
-      - name: Artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: dist
-          path: public
 
   capture:
     needs: build
