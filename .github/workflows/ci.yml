@@ -52,12 +52,14 @@ jobs:
     timeout-minutes: 60
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout
+        uses: actions/checkout@v3
       - name: Setup node
         uses: actions/setup-node@v3
         with:
           node-version: 16.13.x
           cache: npm      
-      - name: Cache hugo
+      - name: Use hugo cache
         id: cache-hugo
         uses: actions/cache@v3
         with:
