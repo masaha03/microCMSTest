@@ -12,21 +12,11 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-
       - name: Setup node
         uses: actions/setup-node@v3
         with:
           node-version: 16.13.x
-          cache: npm
-
-      - name: Install
-        run: npm ci
-
-      - run: npm run update -- --date 2022-06-02T08:23:05.896Z --apiKey ${{ secrets.API_KEY }} --serviceDomain ${{ secrets.SERVICE_DOMAIN }}
-
-  download-hugo:
-    runs-on: ubuntu-latest
-    steps:
+          cache: npm      
       - name: Cache hugo
         id: cache-hugo
         uses: actions/cache@v3
@@ -34,30 +24,16 @@ jobs:
           path: ./hugo
           key: hugo_extended_0.100.1
           restore-keys: hugo_extended_
-      - run: wget https://github.com/gohugoio/hugo/releases/download/v0.100.1/hugo_extended_0.100.1_Linux-64bit.tar.gz
-      - run: tar -xf hugo_extended_0.100.1_Linux-64bit.tar.gz
+      - if: steps.cache-hugo.outputs.cache-hit != 'true'
+        run: wget https://github.com/gohugoio/hugo/releases/download/v0.100.1/hugo_extended_0.100.1_Linux-64bit.tar.gz
+      - if: steps.cache-hugo.outputs.cache-hit != 'true'
+        run: tar -xf hugo_extended_0.100.1_Linux-64bit.tar.gz
 
-  build:
-    needs: [setup, download-hugo]
-    runs-on: ubuntu-latest
-    steps:
-      - name: Use hugo cache
-        id: cache-hugo
-        uses: actions/cache@v3
-        with:
-          path: ./hugo
-          key: hugo_
+      - name: Install
+        run: npm ci
+
+      - run: npm run update -- --date 2022-06-02T08:23:05.896Z --apiKey ${{ secrets.API_KEY }} --serviceDomain ${{ secrets.SERVICE_DOMAIN }}
       - run: ./hugo
-
-  publish:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - name: Artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: dist
-          path: public
 
       - name: Publish
         uses: cloudflare/wrangler-action@2.0.0
@@ -65,25 +41,45 @@ jobs:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           command: pages publish public --project-name=${{ secrets.PROJECT_NAME }} --commit-dirty=true
+      - name: Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: dist
+          path: public
 
   capture:
     needs: build
     timeout-minutes: 60
     runs-on: ubuntu-latest
     steps:
-    - name: Install Playwright Browsers
-      run: npx playwright install --with-deps
-    - name: Run Playwright tests
-      run: npx playwright test
-    - uses: actions/upload-artifact@v2
-      if: always()
-      with:
-        name: playwright-report
-        path: playwright-report/
-        retention-days: 30
-    - uses: actions/upload-artifact@v2
-      if: always()
-      with:
-        name: test-results
-        path: test-results/
-        retention-days: 30
+      - name: Setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16.13.x
+          cache: npm      
+      - name: Cache hugo
+        id: cache-hugo
+        uses: actions/cache@v3
+        with:
+          path: ./hugo
+          key: hugo_extended_
+      - uses: actions/download-artifact@v3
+        with:
+          name: dist
+          path: public
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps
+      - name: Run Playwright tests
+        run: npx playwright test
+      - uses: actions/upload-artifact@v2
+        if: always()
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 30
+      - uses: actions/upload-artifact@v2
+        if: always()
+        with:
+          name: test-results
+          path: test-results/
+          retention-days: 30
