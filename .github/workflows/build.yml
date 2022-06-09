@@ -40,4 +40,4 @@ jobs:
         with:
           apiKey: ${{ secrets.CLOUDFLARE_API_KEY }}
           email: ${{ secrets.CLOUDFLARE_EMAIL }}
-        command: pages publish public --project-name=${{ secrets.PROJECT_NAME }} --commit-dirty=true
+          command: pages publish public --project-name=${{ secrets.PROJECT_NAME }} --commit-dirty=true
