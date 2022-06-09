@@ -1,0 +1,10 @@
+<nav>
+    <ul class="flex flex-col gap-4">
+        {{ with .Site.GetPage "/posts/" }}
+        <li><a href="{{ .RelPermalink }}">{{ .Title }}</a></li>
+        {{ end }}
+        {{ range $key, $value := .Site.Taxonomies.categories }}
+        <li><a href="{{ "/" | relLangURL }}categories/{{ $key | urlize }}">{{ $key }}</a></li>
+        {{ end }}
+    </ul>
+</nav>

@@ -1,0 +1,5 @@
+{{- with partial "utils/format" (slice . ":date_short" ":time_short") -}}
+<!--  -->
+{{- .DateString -}}&nbsp;{{- .TimeString -}}
+<!--  -->
+{{- end -}}

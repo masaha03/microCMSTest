@@ -1,0 +1,7 @@
+{{ $date := (index . 0) }} {{ $dateFormat := (index . 1) }} {{ $timeFormat := (index . 2) }}
+<!--  -->
+{{ $dateString := $date.Local | time.Format $dateFormat }}
+<!--  -->
+{{ $timeString := $date.Local | time.Format $timeFormat }}
+<!--  -->
+{{ return (dict "DateString" $dateString "TimeString" $timeString) }}

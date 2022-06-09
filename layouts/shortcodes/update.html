@@ -1,0 +1,16 @@
+{{ $update := index .Site.Taxonomies.categories "更新情報" }}
+<ul class="flex flex-col gap-2 text-sky-900">
+  {{ range first 5 $update.Pages }}
+  <li>
+    <a href="{{ .Permalink}}">
+      {{ .LinkTitle }}
+      <span class="text-xs">
+        <time datetime="{{ .Date.Local.Format "2006-01-02 15:04" }}">{{ partial "date" .Date }}</time>
+        {{ if ne .Date .Lastmod }}
+        <time datetime="{{ .Lastmod.Local.Format "2006-01-02 15:04" }}">({{ partial "date" .Lastmod }}更新)</time>
+        {{ end }}
+      </span>
+    </a>
+  </li>
+  {{ end }}
+</ul>

@@ -1,0 +1,32 @@
+{{ define "main" }}
+<main class="post-page flex flex-col gap-4">
+  <article class="p-4 bg-sky-50 drop-shadow rounded-sm">
+    <h1 class="text-sky-800 font-bold text-xl">{{ .Title }}</h1>
+    <div class="text-slate-400 text-sm px-4 py-2">
+      <time datetime="{{ .Date.Local.Format "2006-01-02 15:04" }}">{{ partial "date" .Date }}</time>
+      {{ if ne .Date .Lastmod }}
+      <time datetime="{{ .Lastmod.Local.Format "2006-01-02 15:04" }}">({{ partial "date" .Lastmod }}更新)</time>
+      {{ end }}
+      &emsp;
+      {{ $categoryName := index .Params.Categories 0 }}
+      <a href="{{ "/" | relLangURL }}categories/{{ $categoryName }}">{{ $categoryName }}</a>
+    </div>
+    {{ .Content }}
+  </article>
+
+  <div class="flex justify-between bg-sky-50 drop-shadow rounted-sm p-4">
+    <!-- 次のページ -->
+    <div>
+    {{ with .NextInSection }}
+    <a href="{{ .Permalink }}">&laquo;&ensp;{{ .LinkTitle }}</a>
+    {{ end }}
+   </div>
+    <!-- 前のページ -->
+    <div>
+    {{ with .PrevInSection }}
+    <a href="{{ .Permalink }}">{{ .LinkTitle }}&ensp;&raquo;</a>
+    {{ end }}
+    </div>
+  </div>
+</main>
+{{ end }}

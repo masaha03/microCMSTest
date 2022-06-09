@@ -1,0 +1,6 @@
+<meta charset="utf-8" />
+<title>{{ if not .IsHome }}{{ .Title }} | {{ end }}{{ .Site.Data.data.title }}</title>
+<link rel="canonical" href="{{ .Permalink }}" />
+{{ $style := resources.Get "styles/global.scss" | toCSS | minify | fingerprint }}
+<link rel="stylesheet" href="{{ $style.Permalink }}" />
+<script src="https://cdn.tailwindcss.com"></script>

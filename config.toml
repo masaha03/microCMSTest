@@ -1,0 +1,5 @@
+baseURL = 'http://example.org/'
+languageCode = 'ja'
+defaultContentLanguage = 'ja'
+title = 'サイトタイトル'
+timeZone = 'Asia/Tokyo'

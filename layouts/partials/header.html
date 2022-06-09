@@ -1,0 +1,11 @@
+<header class="rounded-sm col-span-2 p-4 font-bold flex gap-8 bg-sky-600 text-sky-50 drop-shadow-sm">
+  <a class="mr-auto" href="{{ "/" | relLangURL }}">
+    <h1>{{ .Site.Data.data.title }}</h1>
+  </a>
+  {{ with .GetPage "/about" }}
+  <a href="{{ .RelPermalink }}">{{ .Title }}</a>
+  {{ end }}
+  {{ with .GetPage "/posts" }}
+  <a href="{{ .RelPermalink }}">{{ .Title }}</a>
+  {{ end }}
+</header>

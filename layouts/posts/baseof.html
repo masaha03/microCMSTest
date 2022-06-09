@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="ja">
+  {{- partial "head" . -}}
+  <body>
+    <div class="main-layout grid p-4 gap-4 bg-sky-100">
+      {{- partial "header" . -}}
+      <!--  -->
+      {{- block "main" . -}}{{- end -}}
+      <!--  -->
+      {{- partial "posts/sidebar" . -}}
+      <!--  -->
+      {{- partial "footer" . -}}
+    </div>
+  </body>
+</html>

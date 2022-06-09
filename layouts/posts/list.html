@@ -1,0 +1,30 @@
+{{ define "main" }}
+<main class="post-page">
+  <ol class="flex flex-col gap-4">
+    {{ range .Data.Pages }}
+    <li class="p-4 bg-sky-50 drop-shadow flex flex-col gap-2">
+      <div>
+        <a class="text-sky-800 font-bold text-xl" href="{{ .RelPermalink }}">{{ .Title }}</a>
+        <time>{{ partial "date" .Date }}</time>
+        {{ if ne .Date .Lastmod }}
+        <time>({{ partial "date" .Lastmod }}更新)</time>
+        {{ end }}
+        &emsp;
+        <span class="text-slate-400 text-sm px-4 py-2">
+          {{ $categoryName := index .Params.Categories 0 }}
+          <a href="{{ "/" | relLangURL }}categories/{{ $categoryName }}">{{ $categoryName }}</a>
+        </span>
+      </div>
+      <div>
+        <img
+          class="rounded-lg"
+          src="{{ .Params.EyeCatch.Url }}"
+          height="{{ .Params.EyeCatch.Height }}"
+          width="{{ .Params.EyeCatch.Width }}"
+        />
+    </div>
+    </li>
+    {{ end }}
+  </ol>
+</main>
+{{ end }}
