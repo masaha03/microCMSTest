@@ -23,7 +23,7 @@ jobs:
       - run: npm run update -- --date 2022-06-02T08:23:05.896Z --apiKey ${{ secrets.API_KEY }} --serviceDomain ${{ secrets.SERVICE_DOMAIN }}
 
       - run: wget https://github.com/gohugoio/hugo/releases/download/v0.100.1/hugo_extended_0.100.1_Linux-64bit.tar.gz
-      - run: tar -xvf hugo_extended_0.100.1_Linux-64bit.tar.gz
+      - run: tar -xf hugo_extended_0.100.1_Linux-64bit.tar.gz
       - run: ./hugo
 
       - uses: actions/upload-artifact@v3
